@@ -433,6 +433,8 @@ export function PortfolioExplorer() {
                             className="file-row nested-row"
                             href={file.href}
                             key={file.id}
+                            target="_blank"
+                            rel="noreferrer"
                             aria-label={`Open ${file.name}`}
                           >
                             {rowContent}
