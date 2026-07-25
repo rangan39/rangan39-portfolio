@@ -349,18 +349,6 @@ export function PortfolioExplorer() {
 
   return (
     <main className="archive-shell">
-      <header className="identity-header">
-        <div>
-          <p className="identity-kicker">personal archive / active</p>
-          <h1>
-            r39<span className="signal-mark">/</span>
-          </h1>
-          <p className="identity-role">
-            small software / strange ideas / useful edges.
-          </p>
-        </div>
-      </header>
-
       <section className="vault" aria-label="r39 filesystem">
         <div className="vault-bar">
           <span className="vault-path">
@@ -525,10 +513,6 @@ export function PortfolioExplorer() {
         </div>
       </section>
 
-      <footer className="archive-footer">
-        <span>small software / strange ideas / useful edges.</span>
-        <span>r39</span>
-      </footer>
     </main>
   );
 }

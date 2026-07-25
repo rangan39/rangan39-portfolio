@@ -82,43 +82,13 @@ button {
 .archive-shell {
   position: relative;
   z-index: 1;
+  display: flex;
   width: min(960px, calc(100% - 48px));
   min-height: 100svh;
   margin: 0 auto;
-  padding: clamp(52px, 8vw, 104px) 0 32px;
-}
-
-.identity-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
-  margin-bottom: clamp(40px, 7vw, 76px);
-}
-
-.identity-kicker {
-  margin: 0 0 18px;
-  color: var(--amber);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.identity-header h1 {
-  max-width: 900px;
-  margin: 0;
-  font-size: clamp(34px, 6.4vw, 76px);
-  font-weight: 500;
-  letter-spacing: -0.065em;
-  line-height: 0.94;
-  text-transform: uppercase;
-}
-
-.identity-role {
-  margin: 18px 0 0;
-  color: var(--muted);
-  font-size: clamp(13px, 1.8vw, 16px);
-  letter-spacing: -0.02em;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(28px, 6vw, 72px) 0;
 }
 
 .vault-root-link:focus-visible,
@@ -505,17 +475,6 @@ button {
   letter-spacing: 0.08em;
 }
 
-.archive-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 72px;
-  color: var(--faint);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-}
-
 @keyframes document-enter {
   from {
     opacity: 0;
@@ -531,28 +490,7 @@ button {
 @media (max-width: 640px) {
   .archive-shell {
     width: min(100% - 28px, 960px);
-    padding-top: 32px;
-  }
-
-  .identity-header {
-    align-items: flex-start;
-    margin-bottom: 38px;
-  }
-
-  .identity-kicker {
-    margin-bottom: 14px;
-    font-size: 9px;
-  }
-
-  .identity-header h1 {
-    max-width: 290px;
-    font-size: clamp(31px, 11vw, 46px);
-    line-height: 0.98;
-  }
-
-  .identity-role {
-    margin-top: 14px;
-    font-size: 13px;
+    padding: 20px 0;
   }
 
   .vault {
@@ -623,16 +561,6 @@ button {
     font-size: 11px;
   }
 
-  .archive-footer {
-    align-items: flex-start;
-    min-height: 64px;
-    font-size: 8px;
-  }
-
-  .archive-footer > :first-child {
-    max-width: 230px;
-    line-height: 1.5;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
