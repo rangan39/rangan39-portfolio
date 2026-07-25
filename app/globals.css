@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+:root {
+  --background: #e9e9e7;
+  --foreground: #20201e;
+  --muted: #777771;
+  --line: #d9d9d4;
+  --panel: #f8f8f6;
+  --panel-strong: #ffffff;
+  --accent: #2251ff;
+  --accent-soft: #e9edff;
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-panel: var(--panel);
+  --color-panel-strong: var(--panel-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-lg: var(--radius);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #ffffff;
+  background: var(--accent);
+}
+
+.portfolio-shell {
+  min-height: 100svh;
+  padding: clamp(0.75rem, 2.2vw, 2rem);
+}
+
+.file-window {
+  width: min(1440px, 100%);
+  min-height: calc(100svh - clamp(1.5rem, 4.4vw, 4rem));
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid rgba(44, 44, 40, 0.14);
+  border-radius: 18px;
+  background: var(--panel);
+  box-shadow:
+    0 28px 70px rgba(38, 38, 34, 0.12),
+    0 2px 8px rgba(38, 38, 34, 0.06);
+}
+
+.file-list-grid {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(13rem, 1fr) 9rem 5.5rem;
+  align-items: center;
+}
+
+.file-row {
+  position: relative;
+}
+
+.file-row::before {
+  position: absolute;
+  inset: 0.35rem 0.5rem;
+  z-index: 0;
+  border-radius: 0.55rem;
+  background: transparent;
+  content: "";
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.file-row:hover::before {
+  background: #f0f0ed;
+}
+
+.file-row[aria-pressed="true"]::before {
+  background: var(--accent-soft);
+}
+
+.file-row:active::before {
+  transform: scale(0.995);
+}
+
+.file-row > * {
+  position: relative;
+  z-index: 1;
+}
+
+.preview-grid {
+  background-image:
+    linear-gradient(rgba(32, 32, 30, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(32, 32, 30, 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@media (max-width: 960px) {
+  .file-window {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .portfolio-shell {
+    padding: 0;
+  }
+
+  .file-window {
+    min-height: 100svh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .file-list-grid {
+    grid-template-columns: 2.25rem minmax(10rem, 1fr);
+  }
+
+  .file-list-grid > :nth-child(n + 3) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
