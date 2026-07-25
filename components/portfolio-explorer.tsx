@@ -137,19 +137,12 @@ function ExternalAction({
 function AboutDocument() {
   return (
     <>
-      <p className="document-eyebrow">readme / 001</p>
-      <h2>
-        r39<span className="signal-mark">/</span>
-      </h2>
+      <p className="document-eyebrow">about.txt</p>
+      <h2>I make software I want to exist.</h2>
       <p className="document-lede">
-        small software / strange ideas / useful edges.
+        Currently working on Sophon — local AI that runs entirely in the
+        browser.
       </p>
-      <div className="document-copy">
-        <p>Small software, strange ideas, useful edges.</p>
-        <p>
-          Things that feel slightly unfamiliar, then become useful.
-        </p>
-      </div>
     </>
   );
 }
