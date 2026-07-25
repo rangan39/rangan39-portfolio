@@ -139,14 +139,14 @@ function AboutDocument() {
     <>
       <p className="document-eyebrow">about.txt</p>
       <p className="document-lede">
-        I work at the intersection of multi-model systems, agents, and decision
-        tools.
+        My interests are in ML systems engineering—especially multi-model
+        routing, agents, and decision tools.
       </p>
       <div className="document-copy">
         <p>
-          My practice spans research and product engineering: publishing
-          benchmarks, building infrastructure, and shipping software around
-          questions that are still taking shape.
+          My work sits between research and product: publishing benchmarks,
+          building infrastructure, and shipping software around questions that
+          are still taking shape.
         </p>
         <p>
           Currently, I build AI-native products at Radical Ventures. Previously,
