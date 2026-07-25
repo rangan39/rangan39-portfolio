@@ -285,15 +285,41 @@ export function PortfolioExplorer() {
   const activeFile = activeFileId ? getFile(activeFileId) : null;
 
   useEffect(() => {
+    function syncFileFromHistory() {
+      const fileId = window.location.hash.slice(1);
+      setActiveFileId(
+        fileId === "about" || fileId === "discord" ? fileId : null,
+      );
+    }
+
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape" && activeFileId) {
-        setActiveFileId(null);
+        returnToIndex();
       }
     }
 
+    syncFileFromHistory();
+    window.addEventListener("popstate", syncFileFromHistory);
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("popstate", syncFileFromHistory);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [activeFileId]);
+
+  function openLocalFile(id: FileId) {
+    window.history.pushState(null, "", `#${id}`);
+    setActiveFileId(id);
+  }
+
+  function returnToIndex() {
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${window.location.search}`,
+    );
+    setActiveFileId(null);
+  }
 
   function toggleGroup(id: GroupId) {
     setExpandedGroups((current) => ({
@@ -337,8 +363,25 @@ export function PortfolioExplorer() {
       <section className="vault" aria-label="r39 filesystem">
         <div className="vault-bar">
           <span className="vault-path">
-            <span aria-hidden="true">~</span>
-            {activeFile ? activeFile.path.slice(1) : "/r39"}
+            {activeFile ? (
+              <>
+                <button
+                  type="button"
+                  className="vault-root-link"
+                  onClick={returnToIndex}
+                  aria-label="Return to index"
+                >
+                  ~/r39
+                </button>
+                <span className="vault-current-path">
+                  {activeFile.path.replace("~/r39", "")}
+                </span>
+              </>
+            ) : (
+              <>
+                <span aria-hidden="true">~</span>/r39
+              </>
+            )}
           </span>
           <span className="vault-kind">
             {activeFile ? activeFile.name.split(".").at(-1) : "index"}
@@ -350,16 +393,16 @@ export function PortfolioExplorer() {
             <button
               type="button"
               className="return-row"
-              onClick={() => setActiveFileId(null)}
-              aria-label="Return to directory"
+              onClick={returnToIndex}
+              aria-label="Back to index"
             >
-              <span className="entry-mode" aria-hidden="true">
-                up
-              </span>
-              <span className="return-name">../</span>
-              <span className="entry-meta">return</span>
-              <span className="entry-arrow" aria-hidden="true">
+              <span className="return-icon" aria-hidden="true">
                 ←
+              </span>
+              <span className="return-name">back to index</span>
+              <kbd className="return-shortcut">esc</kbd>
+              <span className="entry-arrow" aria-hidden="true">
+                ↵
               </span>
             </button>
             <div className="document-body">
@@ -378,7 +421,7 @@ export function PortfolioExplorer() {
             <button
               type="button"
               className="file-row"
-              onClick={() => setActiveFileId(aboutFile.id)}
+              onClick={() => openLocalFile(aboutFile.id)}
               aria-label={`Open ${aboutFile.name}`}
             >
               <span className="entry-mode">{aboutFile.mode}</span>
@@ -444,7 +487,7 @@ export function PortfolioExplorer() {
                             type="button"
                             className="file-row nested-row"
                             key={file.id}
-                            onClick={() => setActiveFileId(file.id)}
+                            onClick={() => openLocalFile(file.id)}
                             aria-label={`Open ${file.name}`}
                           >
                             {rowContent}

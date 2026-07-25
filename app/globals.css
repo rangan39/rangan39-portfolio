@@ -138,6 +138,7 @@ button {
 }
 
 .github-link:focus-visible,
+.vault-root-link:focus-visible,
 .file-row:focus-visible,
 .return-row:focus-visible,
 .document-action:focus-visible {
@@ -186,7 +187,13 @@ button {
 }
 
 .vault-bar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
   border-bottom: 1px solid var(--line);
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .vault-path {
@@ -198,6 +205,24 @@ button {
 
 .vault-path > span {
   color: var(--amber);
+}
+
+.vault-root-link {
+  border: 0;
+  padding: 4px 0;
+  color: var(--amber);
+  background: transparent;
+  cursor: pointer;
+}
+
+.vault-root-link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.vault-current-path {
+  color: var(--muted) !important;
 }
 
 .vault-kind {
@@ -353,10 +378,30 @@ button {
 .return-row {
   min-height: 58px;
   border-bottom-color: var(--line);
+  background: var(--amber-soft);
 }
 
 .return-name {
   color: var(--amber);
+  font-weight: 550;
+}
+
+.return-icon {
+  color: var(--amber);
+  font-size: 18px;
+}
+
+.return-shortcut {
+  justify-self: end;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  padding: 3px 6px;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.2);
+  font: inherit;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .document-body {
