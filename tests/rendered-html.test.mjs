@@ -31,7 +31,11 @@ test("server-renders the portfolio", async () => {
   assert.match(html, /<title>rangan39 \/ home<\/title>/i);
   assert.match(html, /small software \/ strange ideas \/ useful edges\./);
   assert.match(html, /README\.md/);
+  assert.match(html, /linkedin\.link/);
+  assert.match(html, /instagram\.link/);
+  assert.match(html, /discord\.txt/);
+  assert.match(html, /x\.link/);
   assert.match(html, /sophon/);
-  assert.match(html, /stack\.json/);
+  assert.match(html, /oss\//);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });

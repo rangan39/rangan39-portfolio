@@ -219,6 +219,34 @@ button {
   align-items: flex-start;
 }
 
+.tree-group {
+  width: 100%;
+}
+
+.tree-folder {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  border: 0;
+  padding: 6px 4px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.tree-folder:hover .directory,
+.tree-folder[data-active="true"] .directory {
+  color: var(--lime);
+  text-shadow: 0 0 12px rgba(186, 255, 41, 0.4);
+}
+
+.tree-folder[data-active="true"] .tree-branch {
+  color: var(--cyan);
+}
+
 .tree-entry {
   display: grid;
   width: 100%;
@@ -503,6 +531,10 @@ button {
   }
 
   .tree-entry {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+
+  .tree-folder {
     grid-template-columns: 4rem minmax(0, 1fr);
   }
 
