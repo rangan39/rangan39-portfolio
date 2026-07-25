@@ -1,455 +1,452 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type FileId =
-  | "readme"
+  | "about"
   | "linkedin"
   | "instagram"
   | "discord"
   | "x"
   | "sophon";
 
+type GroupId = "work" | "contact" | "oss";
+
 type FileRecord = {
   id: FileId;
   name: string;
   path: string;
-  branch: string;
-  type: string;
+  mode: string;
+  meta: string;
 };
 
 type FileGroup = {
+  id: GroupId;
   name: string;
-  branch: string;
+  meta: string;
   children: FileRecord[];
 };
 
-const readmeFile: FileRecord = {
-  id: "readme",
-  name: "README.md",
-  path: "~/rangan39/README.md",
-  branch: "├──",
-  type: "md",
+const aboutFile: FileRecord = {
+  id: "about",
+  name: "about.txt",
+  path: "~/r39/about.txt",
+  mode: "-rw",
+  meta: "0.8k",
 };
 
 const groups: FileGroup[] = [
   {
+    id: "work",
     name: "work/",
-    branch: "├──",
+    meta: "1 item",
     children: [
       {
         id: "linkedin",
-        name: "linkedin.link",
-        path: "~/rangan39/work/linkedin.link",
-        branch: "│   └──",
-        type: "link",
+        name: "linkedin.url",
+        path: "~/r39/work/linkedin.url",
+        mode: "-rw",
+        meta: "link",
       },
     ],
   },
   {
+    id: "contact",
     name: "contact/",
-    branch: "├──",
+    meta: "3 items",
     children: [
       {
         id: "instagram",
-        name: "instagram.link",
-        path: "~/rangan39/contact/instagram.link",
-        branch: "│   ├──",
-        type: "link",
+        name: "instagram.url",
+        path: "~/r39/contact/instagram.url",
+        mode: "-rw",
+        meta: "link",
       },
       {
         id: "discord",
         name: "discord.txt",
-        path: "~/rangan39/contact/discord.txt",
-        branch: "│   ├──",
-        type: "txt",
+        path: "~/r39/contact/discord.txt",
+        mode: "-rw",
+        meta: "0.1k",
       },
       {
         id: "x",
-        name: "x.link",
-        path: "~/rangan39/contact/x.link",
-        branch: "│   └──",
-        type: "link",
+        name: "x.url",
+        path: "~/r39/contact/x.url",
+        mode: "-rw",
+        meta: "link",
       },
     ],
   },
   {
+    id: "oss",
     name: "oss/",
-    branch: "└──",
+    meta: "1 item",
     children: [
       {
         id: "sophon",
         name: "sophon/",
-        path: "~/rangan39/oss/sophon",
-        branch: "    └──",
-        type: "dir",
+        path: "~/r39/oss/sophon",
+        mode: "drw",
+        meta: "project",
       },
     ],
   },
 ];
 
-const files = [readmeFile, ...groups.flatMap((group) => group.children)];
+const files = [aboutFile, ...groups.flatMap((group) => group.children)];
 
-function Line({
-  number,
+function getFile(id: FileId) {
+  return files.find((file) => file.id === id) ?? aboutFile;
+}
+
+function ExternalAction({
+  href,
   children,
 }: {
-  number: number;
-  children?: ReactNode;
+  href: string;
+  children: ReactNode;
 }) {
   return (
-    <div className="code-line">
-      <span className="line-number" aria-hidden="true">
-        {String(number).padStart(2, "0")}
+    <a className="document-action" href={href} target="_blank" rel="noreferrer">
+      <span>{children}</span>
+      <span aria-hidden="true">↗</span>
+    </a>
+  );
+}
+
+function AboutDocument() {
+  return (
+    <>
+      <p className="document-eyebrow">readme / 001</p>
+      <h2>
+        r39<span className="signal-mark">/</span>
+      </h2>
+      <p className="document-lede">
+        small software / strange ideas / useful edges.
+      </p>
+      <div className="document-copy">
+        <p>Small software, strange ideas, useful edges.</p>
+        <p>
+          Things that feel slightly unfamiliar, then become useful.
+        </p>
+      </div>
+    </>
+  );
+}
+
+function LinkedInDocument() {
+  return (
+    <>
+      <p className="document-eyebrow">work / external record</p>
+      <h2>LinkedIn</h2>
+      <p className="document-lede">The professional trail.</p>
+      <dl className="document-record">
+        <div>
+          <dt>network</dt>
+          <dd>linkedin</dd>
+        </div>
+        <div>
+          <dt>record</dt>
+          <dd>public profile</dd>
+        </div>
+      </dl>
+      <ExternalAction href="https://www.linkedin.com/in/gaurav-ranganath/">
+        open linkedin
+      </ExternalAction>
+    </>
+  );
+}
+
+function InstagramDocument() {
+  return (
+    <>
+      <p className="document-eyebrow">contact / visual channel</p>
+      <h2>Instagram</h2>
+      <p className="document-lede">@gauravranganath</p>
+      <div className="document-copy">
+        <p>Images, fragments, and whatever is happening off-screen.</p>
+      </div>
+      <ExternalAction href="https://www.instagram.com/gauravranganath/">
+        open instagram
+      </ExternalAction>
+    </>
+  );
+}
+
+function DiscordDocument({
+  copied,
+  copyHandle,
+}: {
+  copied: boolean;
+  copyHandle: () => Promise<void>;
+}) {
+  return (
+    <>
+      <p className="document-eyebrow">contact / direct channel</p>
+      <h2>Discord</h2>
+      <p className="document-lede">gauravranganath</p>
+      <div className="document-copy">
+        <p>A direct line. Copy the username and send a signal.</p>
+      </div>
+      <button type="button" className="document-action" onClick={copyHandle}>
+        <span>{copied ? "username copied" : "copy username"}</span>
+        <span aria-hidden="true">{copied ? "✓" : "＋"}</span>
+      </button>
+      <span className="sr-only" aria-live="polite">
+        {copied ? "Discord username copied to clipboard." : ""}
       </span>
-      <span>{children ?? "\u00a0"}</span>
-    </div>
-  );
-}
-
-function openTreeFile(file: FileId) {
-  document.querySelector<HTMLButtonElement>(`[data-file="${file}"]`)?.click();
-}
-
-function Readme() {
-  return (
-    <>
-      <Line number={1}>
-        <span className="syntax-mark">#</span>{" "}
-        <span className="syntax-title">rangan39</span>
-      </Line>
-      <Line number={2} />
-      <Line number={3}>independent builder.</Line>
-      <Line number={4}>small software / strange ideas / useful edges.</Line>
-      <Line number={5} />
-      <Line number={6}>
-        currently: <span className="syntax-signal">shipping</span>
-        <span className="cursor" aria-hidden="true" />
-      </Line>
-      <Line number={7} />
-      <Line number={8}>
-        <button
-          type="button"
-          className="inline-command"
-          onClick={() => openTreeFile("linkedin")}
-        >
-          ./work
-        </button>
-        {"  "}
-        <button
-          type="button"
-          className="inline-command"
-          onClick={() => openTreeFile("instagram")}
-        >
-          ./contact
-        </button>
-        {"  "}
-        <button
-          type="button"
-          className="inline-command"
-          onClick={() => openTreeFile("sophon")}
-        >
-          ./oss
-        </button>
-      </Line>
     </>
   );
 }
 
-function LinkedIn() {
+function XDocument() {
   return (
     <>
-      <Line number={1}>
-        <span className="syntax-comment">{"// work identity"}</span>
-      </Line>
-      <Line number={2} />
-      <Line number={3}>
-        name<span className="syntax-dim">.......</span>gaurav ranganath
-      </Line>
-      <Line number={4}>
-        network<span className="syntax-dim">....</span>linkedin
-      </Line>
-      <Line number={5}>
-        signal<span className="syntax-dim">.....</span>
-        <span className="syntax-signal">connected</span>
-      </Line>
-      <Line number={6} />
-      <Line number={7}>
-        <a
-          className="inline-link"
-          href="https://www.linkedin.com/in/gaurav-ranganath/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          → open linkedin↗
-        </a>
-      </Line>
+      <p className="document-eyebrow">contact / public feed</p>
+      <h2>X</h2>
+      <p className="document-lede">@ranganath92929</p>
+      <div className="document-copy">
+        <p>Notes from the build, in public.</p>
+      </div>
+      <ExternalAction href="https://x.com/ranganath92929">open x</ExternalAction>
     </>
   );
 }
 
-function Instagram() {
+function SophonDocument() {
   return (
     <>
-      <Line number={1}>
-        <span className="syntax-comment">{"// visual channel"}</span>
-      </Line>
-      <Line number={2} />
-      <Line number={3}>
-        network<span className="syntax-dim">....</span>instagram
-      </Line>
-      <Line number={4}>
-        handle<span className="syntax-dim">.....</span>@gauravranganath
-      </Line>
-      <Line number={5} />
-      <Line number={6}>
-        <a
-          className="inline-link"
-          href="https://www.instagram.com/gauravranganath/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          → open instagram↗
-        </a>
-      </Line>
+      <p className="document-eyebrow">oss / active project</p>
+      <h2>Sophon</h2>
+      <p className="document-lede">Local AI, entirely in the browser.</p>
+      <div className="document-copy">
+        <p>
+          A browser-only chat tool that runs ONNX language models in a Web
+          Worker with WebGPU. Prompts stay on the device instead of travelling
+          to an inference server.
+        </p>
+      </div>
+      <div className="document-tags" aria-label="Project technologies">
+        <span>webgpu</span>
+        <span>onnx</span>
+        <span>typescript</span>
+        <span>local-first</span>
+      </div>
+      <div className="document-actions">
+        <ExternalAction href="https://sophon-coral.vercel.app">
+          launch sophon
+        </ExternalAction>
+        <ExternalAction href="https://github.com/rangan39/sophon">
+          view source
+        </ExternalAction>
+      </div>
     </>
   );
 }
 
-function Discord() {
+function fileContent(
+  id: FileId,
+  copied: boolean,
+  copyHandle: () => Promise<void>,
+) {
+  switch (id) {
+    case "linkedin":
+      return <LinkedInDocument />;
+    case "instagram":
+      return <InstagramDocument />;
+    case "discord":
+      return <DiscordDocument copied={copied} copyHandle={copyHandle} />;
+    case "x":
+      return <XDocument />;
+    case "sophon":
+      return <SophonDocument />;
+    default:
+      return <AboutDocument />;
+  }
+}
+
+export function PortfolioExplorer() {
+  const [activeFileId, setActiveFileId] = useState<FileId | null>(null);
+  const [expandedGroups, setExpandedGroups] = useState<
+    Record<GroupId, boolean>
+  >({
+    work: false,
+    contact: false,
+    oss: false,
+  });
   const [copied, setCopied] = useState(false);
 
-  async function copyHandle() {
-    await navigator.clipboard?.writeText("gauravranganath");
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
+  const activeFile = activeFileId ? getFile(activeFileId) : null;
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape" && activeFileId) {
+        setActiveFileId(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeFileId]);
+
+  function toggleGroup(id: GroupId) {
+    setExpandedGroups((current) => ({
+      ...current,
+      [id]: !current[id],
+    }));
+  }
+
+  async function copyDiscordHandle() {
+    try {
+      await navigator.clipboard.writeText("gauravranganath");
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
   }
 
   return (
-    <>
-      <Line number={1}>
-        <span className="syntax-comment">{"// direct channel"}</span>
-      </Line>
-      <Line number={2} />
-      <Line number={3}>
-        network<span className="syntax-dim">....</span>discord
-      </Line>
-      <Line number={4}>
-        username<span className="syntax-dim">...</span>gauravranganath
-      </Line>
-      <Line number={5} />
-      <Line number={6}>
-        <button type="button" className="inline-command" onClick={copyHandle}>
-          → {copied ? "copied to clipboard" : "copy username"}
-        </button>
-      </Line>
-    </>
-  );
-}
-
-function XProfile() {
-  return (
-    <>
-      <Line number={1}>
-        <span className="syntax-comment">{"// public feed"}</span>
-      </Line>
-      <Line number={2} />
-      <Line number={3}>
-        network<span className="syntax-dim">....</span>x
-      </Line>
-      <Line number={4}>
-        handle<span className="syntax-dim">.....</span>@ranganath92929
-      </Line>
-      <Line number={5} />
-      <Line number={6}>
+    <main className="archive-shell">
+      <header className="identity-header">
+        <div>
+          <p className="identity-kicker">personal archive / active</p>
+          <h1>
+            r39<span className="signal-mark">/</span>
+          </h1>
+          <p className="identity-role">
+            small software / strange ideas / useful edges.
+          </p>
+        </div>
         <a
-          className="inline-link"
-          href="https://x.com/ranganath92929"
-          target="_blank"
-          rel="noreferrer"
-        >
-          → open x↗
-        </a>
-      </Line>
-    </>
-  );
-}
-
-function Sophon() {
-  return (
-    <>
-      <Line number={1}>
-        <span className="syntax-comment">{"// open source transmission"}</span>
-      </Line>
-      <Line number={2} />
-      <Line number={3}>
-        name<span className="syntax-dim">.....</span>sophon
-      </Line>
-      <Line number={4}>
-        language<span className="syntax-dim">.</span>typescript
-      </Line>
-      <Line number={5}>
-        state<span className="syntax-dim">....</span>
-        <span className="syntax-signal">alive</span>
-      </Line>
-      <Line number={6} />
-      <Line number={7}>
-        <a
-          className="inline-link"
-          href="https://github.com/rangan39/sophon"
-          target="_blank"
-          rel="noreferrer"
-        >
-          → repository↗
-        </a>
-      </Line>
-      <Line number={8}>
-        <a
-          className="inline-link"
-          href="https://sophon-coral.vercel.app"
-          target="_blank"
-          rel="noreferrer"
-        >
-          → live build↗
-        </a>
-      </Line>
-    </>
-  );
-}
-
-const fileContents: Record<FileId, ReactNode> = {
-  readme: <Readme />,
-  linkedin: <LinkedIn />,
-  instagram: <Instagram />,
-  discord: <Discord />,
-  x: <XProfile />,
-  sophon: <Sophon />,
-};
-
-const lineCounts: Record<FileId, number> = {
-  readme: 8,
-  linkedin: 7,
-  instagram: 6,
-  discord: 6,
-  x: 6,
-  sophon: 8,
-};
-
-export function PortfolioExplorer() {
-  const [activeId, setActiveId] = useState<FileId>("readme");
-  const activeFile = files.find((file) => file.id === activeId) ?? readmeFile;
-
-  return (
-    <main className="site-shell">
-      <header className="site-header">
-        <button
-          type="button"
-          className="site-mark"
-          onClick={() => setActiveId("readme")}
-          aria-label="Open README"
-        >
-          r39<span>/</span>
-        </button>
-        <span className="system-coordinate">node: 0x0027</span>
-        <a
-          className="header-link"
+          className="github-link"
           href="https://github.com/rangan39"
           target="_blank"
           rel="noreferrer"
         >
-          git↗
+          github <span aria-hidden="true">↗</span>
         </a>
       </header>
 
-      <section className="filesystem" aria-label="rangan39 filesystem">
-        <aside className="file-tree">
-          <div className="tree-root">
-            <span className="syntax-signal">~</span>/rangan39
-          </div>
-          <div className="tree-list">
+      <section className="vault" aria-label="r39 filesystem">
+        <div className="vault-bar">
+          <span className="vault-path">
+            <span aria-hidden="true">~</span>
+            {activeFile ? activeFile.path.slice(1) : "/r39"}
+          </span>
+          <span className="vault-kind">
+            {activeFile ? activeFile.name.split(".").at(-1) : "index"}
+          </span>
+        </div>
+
+        {activeFile ? (
+          <article className="document-view">
             <button
               type="button"
-              data-file={readmeFile.id}
-              onClick={() => setActiveId(readmeFile.id)}
-              aria-pressed={activeId === readmeFile.id}
-              className="tree-entry"
+              className="return-row"
+              onClick={() => setActiveFileId(null)}
+              aria-label="Return to directory"
             >
-              <span className="tree-branch" aria-hidden="true">
-                {readmeFile.branch}
+              <span className="entry-mode" aria-hidden="true">
+                up
               </span>
-              <span>{readmeFile.name}</span>
+              <span className="return-name">../</span>
+              <span className="entry-meta">return</span>
+              <span className="entry-arrow" aria-hidden="true">
+                ←
+              </span>
+            </button>
+            <div className="document-body">
+              {fileContent(activeFile.id, copied, copyDiscordHandle)}
+            </div>
+          </article>
+        ) : (
+          <div className="directory-view">
+            <div className="listing-head" aria-hidden="true">
+              <span>mode</span>
+              <span>name</span>
+              <span>data</span>
+              <span />
+            </div>
+
+            <button
+              type="button"
+              className="file-row"
+              onClick={() => setActiveFileId(aboutFile.id)}
+              aria-label={`Open ${aboutFile.name}`}
+            >
+              <span className="entry-mode">{aboutFile.mode}</span>
+              <span className="entry-name">{aboutFile.name}</span>
+              <span className="entry-meta">{aboutFile.meta}</span>
+              <span className="entry-arrow" aria-hidden="true">
+                →
+              </span>
             </button>
 
             {groups.map((group) => {
-              const groupIsActive = group.children.some(
-                (file) => file.id === activeId,
-              );
+              const isExpanded = expandedGroups[group.id];
 
               return (
-                <div key={group.name} className="tree-group">
+                <div className="folder-group" key={group.id}>
                   <button
                     type="button"
-                    className="tree-folder"
-                    data-active={groupIsActive}
-                    onClick={() => setActiveId(group.children[0].id)}
-                    aria-label={`Open ${group.name}`}
+                    className="file-row folder-row"
+                    onClick={() => toggleGroup(group.id)}
+                    aria-expanded={isExpanded}
+                    aria-controls={`${group.id}-files`}
                   >
-                    <span className="tree-branch" aria-hidden="true">
-                      {group.branch}
+                    <span className="entry-mode">drw</span>
+                    <span className="entry-name">{group.name}</span>
+                    <span className="entry-meta">{group.meta}</span>
+                    <span className="entry-arrow" aria-hidden="true">
+                      {isExpanded ? "−" : "+"}
                     </span>
-                    <span className="directory">{group.name}</span>
                   </button>
-                  {group.children.map((file) => (
-                    <button
-                      key={file.id}
-                      type="button"
-                      data-file={file.id}
-                      onClick={() => setActiveId(file.id)}
-                      aria-pressed={activeId === file.id}
-                      className="tree-entry"
-                    >
-                      <span className="tree-branch" aria-hidden="true">
-                        {file.branch}
-                      </span>
-                      <span
-                        className={file.type === "dir" ? "directory" : undefined}
-                      >
-                        {file.name}
-                      </span>
-                    </button>
-                  ))}
+
+                  {isExpanded ? (
+                    <div className="nested-files" id={`${group.id}-files`}>
+                      {group.children.map((file) => (
+                        <button
+                          type="button"
+                          className="file-row nested-row"
+                          key={file.id}
+                          onClick={() => setActiveFileId(file.id)}
+                          aria-label={`Open ${file.name}`}
+                        >
+                          <span className="entry-mode">{file.mode}</span>
+                          <span className="entry-name">
+                            <span className="nested-branch" aria-hidden="true">
+                              └─
+                            </span>
+                            {file.name}
+                          </span>
+                          <span className="entry-meta">{file.meta}</span>
+                          <span className="entry-arrow" aria-hidden="true">
+                            →
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               );
             })}
           </div>
-          <p className="tree-hint" aria-hidden="true">
-            click a node
-          </p>
-        </aside>
+        )}
 
-        <section className="file-viewer" aria-live="polite">
-          <div className="viewer-header">
-            <span>{activeFile.path}</span>
-            <span className="file-type">{activeFile.type}</span>
-          </div>
-          <div className="code-view">{fileContents[activeFile.id]}</div>
-          <div className="viewer-status" aria-hidden="true">
-            <span>utf-8</span>
-            <span>ln {String(lineCounts[activeId]).padStart(2, "0")}</span>
-            <span className="status-signal">
-              <i />
-              sync
-            </span>
-          </div>
-        </section>
+        <div className="vault-footer" aria-hidden="true">
+          <span>{activeFile ? activeFile.name : "4 items / 6 files"}</span>
+          <span className="vault-signal">
+            <i />
+            ready
+          </span>
+        </div>
       </section>
 
-      <footer className="site-footer">
-        <span>
-          sys<span className="syntax-dim">.</span>online
-        </span>
-        <span aria-hidden="true">∴</span>
-        <span>2026</span>
+      <footer className="archive-footer">
+        <span>small software / strange ideas / useful edges.</span>
+        <span>r39</span>
       </footer>
     </main>
   );

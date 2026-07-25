@@ -28,14 +28,15 @@ test("server-renders the portfolio", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>rangan39 \/ home<\/title>/i);
-  assert.match(html, /small software \/ strange ideas \/ useful edges\./);
-  assert.match(html, /README\.md/);
-  assert.match(html, /linkedin\.link/);
-  assert.match(html, /instagram\.link/);
-  assert.match(html, /discord\.txt/);
-  assert.match(html, /x\.link/);
-  assert.match(html, /sophon/);
+  assert.match(
+    html,
+    /<title>r39 \/ archive<\/title>/i,
+  );
+  assert.match(html, /small software, strange ideas, useful edges\./i);
+  assert.match(html, /about\.txt/);
+  assert.match(html, /work\//);
+  assert.match(html, /contact\//);
   assert.match(html, /oss\//);
+  assert.doesNotMatch(html, /Gaurav Ranganath|independent builder/i);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });

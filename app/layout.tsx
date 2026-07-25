@@ -27,30 +27,23 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase,
     title: {
-      default: "rangan39 / home",
-      template: "%s · rangan39",
+      default: "r39 / archive",
+      template: "%s · r39",
     },
     description:
-      "The personal filesystem of rangan39 — small software, strange ideas, useful edges.",
-    applicationName: "rangan39",
+      "The r39 archive — small software, strange ideas, useful edges.",
+    applicationName: "r39",
     openGraph: {
-      title: "rangan39 / home",
-      description: "Small software, strange ideas, useful edges.",
+      title: "r39 / archive",
+      description:
+        "A personal archive of small software, strange ideas, and useful edges.",
       type: "website",
-      images: [
-        {
-          url: "/og.png",
-          width: 1536,
-          height: 1024,
-          alt: "The rangan39 filesystem",
-        },
-      ],
     },
     twitter: {
-      card: "summary_large_image",
-      title: "rangan39 / home",
-      description: "Small software, strange ideas, useful edges.",
-      images: ["/og.png"],
+      card: "summary",
+      title: "r39 / archive",
+      description:
+        "A personal archive of small software, strange ideas, and useful edges.",
     },
   };
 }
