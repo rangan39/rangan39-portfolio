@@ -18,6 +18,7 @@ type FileRecord = {
   path: string;
   mode: string;
   meta: string;
+  href?: string;
 };
 
 type FileGroup = {
@@ -47,6 +48,7 @@ const groups: FileGroup[] = [
         path: "~/r39/work/linkedin.url",
         mode: "-rw",
         meta: "link",
+        href: "https://www.linkedin.com/in/gaurav-ranganath/",
       },
     ],
   },
@@ -61,6 +63,7 @@ const groups: FileGroup[] = [
         path: "~/r39/contact/instagram.url",
         mode: "-rw",
         meta: "link",
+        href: "https://www.instagram.com/gauravranganath/",
       },
       {
         id: "discord",
@@ -75,6 +78,7 @@ const groups: FileGroup[] = [
         path: "~/r39/contact/x.url",
         mode: "-rw",
         meta: "link",
+        href: "https://x.com/ranganath92929",
       },
     ],
   },
@@ -89,6 +93,7 @@ const groups: FileGroup[] = [
         path: "~/r39/oss/sophon",
         mode: "drw",
         meta: "project",
+        href: "https://github.com/rangan39/sophon",
       },
     ],
   },
@@ -406,27 +411,44 @@ export function PortfolioExplorer() {
 
                   {isExpanded ? (
                     <div className="nested-files" id={`${group.id}-files`}>
-                      {group.children.map((file) => (
-                        <button
-                          type="button"
-                          className="file-row nested-row"
-                          key={file.id}
-                          onClick={() => setActiveFileId(file.id)}
-                          aria-label={`Open ${file.name}`}
-                        >
-                          <span className="entry-mode">{file.mode}</span>
-                          <span className="entry-name">
-                            <span className="nested-branch" aria-hidden="true">
-                              └─
+                      {group.children.map((file) => {
+                        const rowContent = (
+                          <>
+                            <span className="entry-mode">{file.mode}</span>
+                            <span className="entry-name">
+                              <span className="nested-branch" aria-hidden="true">
+                                └─
+                              </span>
+                              {file.name}
                             </span>
-                            {file.name}
-                          </span>
-                          <span className="entry-meta">{file.meta}</span>
-                          <span className="entry-arrow" aria-hidden="true">
-                            →
-                          </span>
-                        </button>
-                      ))}
+                            <span className="entry-meta">{file.meta}</span>
+                            <span className="entry-arrow" aria-hidden="true">
+                              {file.href ? "↗" : "→"}
+                            </span>
+                          </>
+                        );
+
+                        return file.href ? (
+                          <a
+                            className="file-row nested-row"
+                            href={file.href}
+                            key={file.id}
+                            aria-label={`Open ${file.name}`}
+                          >
+                            {rowContent}
+                          </a>
+                        ) : (
+                          <button
+                            type="button"
+                            className="file-row nested-row"
+                            key={file.id}
+                            onClick={() => setActiveFileId(file.id)}
+                            aria-label={`Open ${file.name}`}
+                          >
+                            {rowContent}
+                          </button>
+                        );
+                      })}
                     </div>
                   ) : null}
                 </div>
