@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 type FileId =
   | "about"
+  | "github"
   | "linkedin"
   | "instagram"
   | "discord"
@@ -34,6 +35,15 @@ const aboutFile: FileRecord = {
   path: "~/r39/about.txt",
   mode: "-rw",
   meta: "0.8k",
+};
+
+const githubFile: FileRecord = {
+  id: "github",
+  name: "github.url",
+  path: "~/r39/github.url",
+  mode: "-rw",
+  meta: "link",
+  href: "https://github.com/rangan39",
 };
 
 const groups: FileGroup[] = [
@@ -99,7 +109,11 @@ const groups: FileGroup[] = [
   },
 ];
 
-const files = [aboutFile, ...groups.flatMap((group) => group.children)];
+const files = [
+  aboutFile,
+  githubFile,
+  ...groups.flatMap((group) => group.children),
+];
 
 function getFile(id: FileId) {
   return files.find((file) => file.id === id) ?? aboutFile;
@@ -345,14 +359,6 @@ export function PortfolioExplorer() {
             small software / strange ideas / useful edges.
           </p>
         </div>
-        <a
-          className="github-link"
-          href="https://github.com/rangan39"
-          target="_blank"
-          rel="noreferrer"
-        >
-          github <span aria-hidden="true">↗</span>
-        </a>
       </header>
 
       <section className="vault" aria-label="r39 filesystem">
@@ -426,6 +432,21 @@ export function PortfolioExplorer() {
               </span>
             </a>
 
+            <a
+              className="file-row"
+              href={githubFile.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Open ${githubFile.name}`}
+            >
+              <span className="entry-mode">{githubFile.mode}</span>
+              <span className="entry-name">{githubFile.name}</span>
+              <span className="entry-meta">{githubFile.meta}</span>
+              <span className="entry-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+
             {groups.map((group) => {
               const isExpanded = expandedGroups[group.id];
 
@@ -496,7 +517,7 @@ export function PortfolioExplorer() {
         )}
 
         <div className="vault-footer" aria-hidden="true">
-          <span>{activeFile ? activeFile.name : "4 items / 6 files"}</span>
+          <span>{activeFile ? activeFile.name : "5 items / 7 files"}</span>
           <span className="vault-signal">
             <i />
             ready

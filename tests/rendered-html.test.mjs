@@ -34,6 +34,7 @@ test("server-renders the portfolio", async () => {
   );
   assert.match(html, /small software, strange ideas, useful edges\./i);
   assert.match(html, /about\.txt/);
+  assert.match(html, /github\.url/);
   assert.match(html, /work\//);
   assert.match(html, /contact\//);
   assert.match(html, /oss\//);

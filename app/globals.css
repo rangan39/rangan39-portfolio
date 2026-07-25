@@ -121,23 +121,6 @@ button {
   letter-spacing: -0.02em;
 }
 
-.github-link {
-  flex: 0 0 auto;
-  padding-bottom: 3px;
-  color: var(--muted);
-  font-size: 12px;
-  text-decoration: none;
-  transition:
-    color 120ms ease,
-    transform 120ms ease;
-}
-
-.github-link:hover {
-  color: var(--amber);
-  transform: translateY(-1px);
-}
-
-.github-link:focus-visible,
 .vault-root-link:focus-visible,
 .file-row:focus-visible,
 .return-row:focus-visible,
@@ -570,11 +553,6 @@ button {
   .identity-role {
     margin-top: 14px;
     font-size: 13px;
-  }
-
-  .github-link {
-    padding-top: 2px;
-    font-size: 10px;
   }
 
   .vault {
