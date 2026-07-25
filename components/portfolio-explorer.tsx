@@ -299,18 +299,13 @@ export function PortfolioExplorer() {
     }
 
     syncFileFromHistory();
-    window.addEventListener("popstate", syncFileFromHistory);
+    window.addEventListener("hashchange", syncFileFromHistory);
     window.addEventListener("keydown", handleKeyDown);
     return () => {
-      window.removeEventListener("popstate", syncFileFromHistory);
+      window.removeEventListener("hashchange", syncFileFromHistory);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeFileId]);
-
-  function openLocalFile(id: FileId) {
-    window.history.pushState(null, "", `#${id}`);
-    setActiveFileId(id);
-  }
 
   function returnToIndex() {
     window.history.replaceState(
@@ -418,10 +413,9 @@ export function PortfolioExplorer() {
               <span />
             </div>
 
-            <button
-              type="button"
+            <a
               className="file-row"
-              onClick={() => openLocalFile(aboutFile.id)}
+              href={`#${aboutFile.id}`}
               aria-label={`Open ${aboutFile.name}`}
             >
               <span className="entry-mode">{aboutFile.mode}</span>
@@ -430,7 +424,7 @@ export function PortfolioExplorer() {
               <span className="entry-arrow" aria-hidden="true">
                 →
               </span>
-            </button>
+            </a>
 
             {groups.map((group) => {
               const isExpanded = expandedGroups[group.id];
@@ -483,15 +477,14 @@ export function PortfolioExplorer() {
                             {rowContent}
                           </a>
                         ) : (
-                          <button
-                            type="button"
+                          <a
                             className="file-row nested-row"
+                            href={`#${file.id}`}
                             key={file.id}
-                            onClick={() => openLocalFile(file.id)}
                             aria-label={`Open ${file.name}`}
                           >
                             {rowContent}
-                          </button>
+                          </a>
                         );
                       })}
                     </div>
