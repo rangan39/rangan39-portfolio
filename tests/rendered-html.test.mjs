@@ -28,10 +28,10 @@ test("server-renders the portfolio", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>rangan39 — Independent product studio<\/title>/i);
-  assert.match(html, /Building useful, considered software\./);
+  assert.match(html, /<title>rangan39 \/ home<\/title>/i);
+  assert.match(html, /small software \/ strange ideas \/ useful edges\./);
   assert.match(html, /README\.md/);
   assert.match(html, /sophon/);
-  assert.match(html, /Next\.js 16/);
+  assert.match(html, /stack\.json/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });

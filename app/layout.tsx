@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,27 +13,47 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "rangan39 — Independent product studio",
-    template: "%s · rangan39",
-  },
-  description:
-    "The portfolio of rangan39, an independent builder creating clear and reliable digital products.",
-  applicationName: "rangan39 portfolio",
-  openGraph: {
-    title: "rangan39 — Independent product studio",
+export async function generateMetadata(): Promise<Metadata> {
+  const requestHeaders = await headers();
+  const host =
+    requestHeaders.get("x-forwarded-host") ??
+    requestHeaders.get("host") ??
+    "rangan39-portfolio.gaurav-ranganath.chatgpt.site";
+  const protocol =
+    requestHeaders.get("x-forwarded-proto") ??
+    (host.startsWith("localhost") ? "http" : "https");
+  const metadataBase = new URL(`${protocol}://${host}`);
+
+  return {
+    metadataBase,
+    title: {
+      default: "rangan39 / home",
+      template: "%s · rangan39",
+    },
     description:
-      "A filesystem-style portfolio for an independent product builder.",
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "rangan39 — Independent product studio",
-    description:
-      "A filesystem-style portfolio for an independent product builder.",
-  },
-};
+      "The personal filesystem of rangan39 — small software, strange ideas, useful edges.",
+    applicationName: "rangan39",
+    openGraph: {
+      title: "rangan39 / home",
+      description: "Small software, strange ideas, useful edges.",
+      type: "website",
+      images: [
+        {
+          url: "/og.png",
+          width: 1536,
+          height: 1024,
+          alt: "The rangan39 filesystem",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "rangan39 / home",
+      description: "Small software, strange ideas, useful edges.",
+      images: ["/og.png"],
+    },
+  };
+}
 
 export default function RootLayout({
   children,
