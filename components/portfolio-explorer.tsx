@@ -138,11 +138,32 @@ function AboutDocument() {
   return (
     <>
       <p className="document-eyebrow">about.txt</p>
-      <h2>I make software I want to exist.</h2>
       <p className="document-lede">
-        Currently working on Sophon — local AI that runs entirely in the
-        browser.
+        I work at the intersection of multi-model systems, agents, and decision
+        tools.
       </p>
+      <div className="document-copy">
+        <p>
+          My practice spans research and product engineering: publishing
+          benchmarks, building infrastructure, and shipping software around
+          questions that are still taking shape.
+        </p>
+        <p>
+          Currently, I build AI-native products at Radical Ventures. Previously,
+          I worked on multi-model infrastructure at Martian and led DeepView, a
+          real-time mining intelligence platform at Stratum AI.
+        </p>
+        <p>
+          I co-authored RouterBench, an open benchmark and large-scale dataset
+          for evaluating multi-LLM routing across cost and quality. It has been
+          cited in 250+ papers.
+        </p>
+        <p>
+          Current project: Sophon, local AI that runs entirely in the browser. I
+          also mentor builders through MakeUofT, UofTHacks, and other early
+          technical communities.
+        </p>
+      </div>
     </>
   );
 }
