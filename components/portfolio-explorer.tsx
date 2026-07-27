@@ -6,7 +6,7 @@ type FileId =
   | "about"
   | "github"
   | "linkedin"
-  | "instagram"
+  | "email"
   | "discord"
   | "x"
   | "sophon";
@@ -68,12 +68,11 @@ const groups: FileGroup[] = [
     meta: "3 items",
     children: [
       {
-        id: "instagram",
-        name: "instagram.url",
-        path: "~/r39/contact/instagram.url",
+        id: "email",
+        name: "email.txt",
+        path: "~/r39/contact/email.txt",
         mode: "-rw",
-        meta: "link",
-        href: "https://www.instagram.com/gauravranganath/",
+        meta: "0.1k",
       },
       {
         id: "discord",
@@ -179,18 +178,28 @@ function LinkedInDocument() {
   );
 }
 
-function InstagramDocument() {
+function EmailDocument({
+  copied,
+  copyAddress,
+}: {
+  copied: boolean;
+  copyAddress: () => Promise<void>;
+}) {
   return (
     <>
-      <p className="document-eyebrow">contact / visual channel</p>
-      <h2>Instagram</h2>
-      <p className="document-lede">@gauravranganath</p>
+      <p className="document-eyebrow">contact / email</p>
+      <h2>Email</h2>
+      <p className="document-lede">dev@rangan39.sh</p>
       <div className="document-copy">
-        <p>Images, fragments, and whatever is happening off-screen.</p>
+        <p>For projects, research, or a useful conversation.</p>
       </div>
-      <ExternalAction href="https://www.instagram.com/gauravranganath/">
-        open instagram
-      </ExternalAction>
+      <button type="button" className="document-action" onClick={copyAddress}>
+        <span>{copied ? "email copied" : "copy email"}</span>
+        <span aria-hidden="true">{copied ? "✓" : "＋"}</span>
+      </button>
+      <span className="sr-only" aria-live="polite">
+        {copied ? "Email address copied to clipboard." : ""}
+      </span>
     </>
   );
 }
@@ -268,16 +277,25 @@ function SophonDocument() {
 
 function fileContent(
   id: FileId,
-  copied: boolean,
-  copyHandle: () => Promise<void>,
+  discordCopied: boolean,
+  copyDiscordHandle: () => Promise<void>,
+  emailCopied: boolean,
+  copyEmailAddress: () => Promise<void>,
 ) {
   switch (id) {
     case "linkedin":
       return <LinkedInDocument />;
-    case "instagram":
-      return <InstagramDocument />;
+    case "email":
+      return (
+        <EmailDocument copied={emailCopied} copyAddress={copyEmailAddress} />
+      );
     case "discord":
-      return <DiscordDocument copied={copied} copyHandle={copyHandle} />;
+      return (
+        <DiscordDocument
+          copied={discordCopied}
+          copyHandle={copyDiscordHandle}
+        />
+      );
     case "x":
       return <XDocument />;
     case "sophon":
@@ -296,7 +314,8 @@ export function PortfolioExplorer() {
     contact: false,
     oss: false,
   });
-  const [copied, setCopied] = useState(false);
+  const [discordCopied, setDiscordCopied] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
 
   const activeFile = activeFileId ? getFile(activeFileId) : null;
 
@@ -304,7 +323,9 @@ export function PortfolioExplorer() {
     function syncFileFromHistory() {
       const fileId = window.location.hash.slice(1);
       setActiveFileId(
-        fileId === "about" || fileId === "discord" ? fileId : null,
+        fileId === "about" || fileId === "discord" || fileId === "email"
+          ? fileId
+          : null,
       );
     }
 
@@ -342,10 +363,20 @@ export function PortfolioExplorer() {
   async function copyDiscordHandle() {
     try {
       await navigator.clipboard.writeText("gauravranganath");
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
+      setDiscordCopied(true);
+      window.setTimeout(() => setDiscordCopied(false), 1800);
     } catch {
-      setCopied(false);
+      setDiscordCopied(false);
+    }
+  }
+
+  async function copyEmailAddress() {
+    try {
+      await navigator.clipboard.writeText("dev@rangan39.sh");
+      setEmailCopied(true);
+      window.setTimeout(() => setEmailCopied(false), 1800);
+    } catch {
+      setEmailCopied(false);
     }
   }
 
@@ -397,7 +428,13 @@ export function PortfolioExplorer() {
               </span>
             </button>
             <div className="document-body">
-              {fileContent(activeFile.id, copied, copyDiscordHandle)}
+              {fileContent(
+                activeFile.id,
+                discordCopied,
+                copyDiscordHandle,
+                emailCopied,
+                copyEmailAddress,
+              )}
             </div>
           </article>
         ) : (
