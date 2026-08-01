@@ -9,7 +9,7 @@ type FileId =
   | "email"
   | "discord"
   | "x"
-  | "sophon";
+  | "glaux";
 
 type GroupId = "work" | "contact" | "oss";
 
@@ -97,12 +97,12 @@ const groups: FileGroup[] = [
     meta: "1 item",
     children: [
       {
-        id: "sophon",
-        name: "sophon/",
-        path: "~/r39/oss/sophon",
+        id: "glaux",
+        name: "glaux/",
+        path: "~/r39/oss/glaux",
         mode: "drw",
         meta: "project",
-        href: "https://github.com/rangan39/sophon",
+        href: "https://glaux.rangan39.sh/",
       },
     ],
   },
@@ -145,7 +145,8 @@ function AboutDocument() {
           I&apos;m interested in ML systems engineering, particularly model
           routing, agents, and local AI. I co-authored RouterBench, an open
           benchmark for multi-model routing, and I&apos;m currently working on
-          Sophon, a local AI project that runs in the browser.
+          Glaux, an open-source multilingual AI tool that runs locally in the
+          browser.
         </p>
         <p>
           This site is a collection of things I&apos;ve built and worked on.
@@ -244,37 +245,6 @@ function XDocument() {
   );
 }
 
-function SophonDocument() {
-  return (
-    <>
-      <p className="document-eyebrow">oss / active project</p>
-      <h2>Sophon</h2>
-      <p className="document-lede">Local AI, entirely in the browser.</p>
-      <div className="document-copy">
-        <p>
-          A browser-only chat tool that runs ONNX language models in a Web
-          Worker with WebGPU. Prompts stay on the device instead of travelling
-          to an inference server.
-        </p>
-      </div>
-      <div className="document-tags" aria-label="Project technologies">
-        <span>webgpu</span>
-        <span>onnx</span>
-        <span>typescript</span>
-        <span>local-first</span>
-      </div>
-      <div className="document-actions">
-        <ExternalAction href="https://sophon-coral.vercel.app">
-          launch sophon
-        </ExternalAction>
-        <ExternalAction href="https://github.com/rangan39/sophon">
-          view source
-        </ExternalAction>
-      </div>
-    </>
-  );
-}
-
 function fileContent(
   id: FileId,
   discordCopied: boolean,
@@ -298,8 +268,6 @@ function fileContent(
       );
     case "x":
       return <XDocument />;
-    case "sophon":
-      return <SophonDocument />;
     default:
       return <AboutDocument />;
   }
