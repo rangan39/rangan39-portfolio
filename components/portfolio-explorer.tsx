@@ -144,9 +144,17 @@ function AboutDocument() {
         <p>
           I&apos;m interested in ML systems engineering, particularly model
           routing, agents, and local AI. I co-authored RouterBench, an open
-          benchmark for multi-model routing, and I&apos;m currently working on
-          Glaux, an open-source multilingual AI tool that runs locally in the
-          browser.
+          benchmark for multi-model routing.
+        </p>
+        <p>
+          On nights and weekends, I build Glaux, a personal open-source project
+          for downloading and running compatible language models directly in a
+          WebGPU-enabled browser. It searches public models from Hugging
+          Face&apos;s ONNX Community, checks them against the browser runtime,
+          stores them locally, and runs text generation on-device with ONNX
+          Runtime Web. ONNX is an open model format stewarded by the Linux
+          Foundation. Prompts and generated responses never go to an inference
+          server.
         </p>
         <p>
           This site is a collection of things I&apos;ve built and worked on.
