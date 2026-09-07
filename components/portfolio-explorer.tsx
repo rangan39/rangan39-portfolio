@@ -9,7 +9,8 @@ type FileId =
   | "email"
   | "discord"
   | "x"
-  | "glaux";
+  | "debianGuide"
+  | "minecraftSkill";
 
 type GroupId = "work" | "contact" | "oss";
 
@@ -94,15 +95,23 @@ const groups: FileGroup[] = [
   {
     id: "oss",
     name: "oss/",
-    meta: "1 item",
+    meta: "2 items",
     children: [
       {
-        id: "glaux",
-        name: "glaux/",
-        path: "~/r39/oss/glaux",
+        id: "debianGuide",
+        name: "debian-os-bootable-usb-guide/",
+        path: "~/r39/oss/debian-os-bootable-usb-guide",
         mode: "drw",
         meta: "project",
-        href: "https://glaux.rangan39.sh/",
+        href: "https://github.com/rangan39/debian-os-bootable-usb-guide",
+      },
+      {
+        id: "minecraftSkill",
+        name: "minecraft-server-skill/",
+        path: "~/r39/oss/minecraft-server-skill",
+        mode: "drw",
+        meta: "project",
+        href: "https://github.com/rangan39/minecraft-server-skill",
       },
     ],
   },
@@ -145,12 +154,6 @@ function AboutDocument() {
           I&apos;m interested in ML systems engineering—model routing, agents,
           and local AI. I co-authored RouterBench, an open benchmark for
           multi-model routing.
-        </p>
-        <p>
-          On nights and weekends, I build Glaux, an open-source tool for running
-          compatible language models locally in WebGPU-enabled browsers. Models
-          come from Hugging Face&apos;s ONNX Community; prompts and responses
-          never leave the device.
         </p>
       </div>
     </>
@@ -513,7 +516,7 @@ export function PortfolioExplorer() {
         )}
 
         <div className="vault-footer" aria-hidden="true">
-          <span>{activeFile ? activeFile.name : "5 items / 7 files"}</span>
+          <span>{activeFile ? activeFile.name : "5 items / 8 files"}</span>
           <span className="vault-signal">
             <i />
             ready
