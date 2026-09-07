@@ -7,8 +7,6 @@ type FileId =
   | "github"
   | "linkedin"
   | "email"
-  | "discord"
-  | "x"
   | "debianGuide"
   | "minecraftSkill";
 
@@ -89,7 +87,7 @@ const groups: FileGroup[] = [
   {
     id: "contact",
     name: "contact/",
-    meta: "3 items",
+    meta: "1 item",
     children: [
       {
         id: "email",
@@ -97,21 +95,6 @@ const groups: FileGroup[] = [
         path: "~/r39/contact/email.txt",
         mode: "-rw",
         meta: "0.1k",
-      },
-      {
-        id: "discord",
-        name: "discord.txt",
-        path: "~/r39/contact/discord.txt",
-        mode: "-rw",
-        meta: "0.1k",
-      },
-      {
-        id: "x",
-        name: "x.url",
-        path: "~/r39/contact/x.url",
-        mode: "-rw",
-        meta: "link",
-        href: "https://x.com/ranganath92929",
       },
     ],
   },
@@ -194,7 +177,7 @@ function EmailDocument({
     <>
       <p className="document-eyebrow">contact / email</p>
       <h2>Email</h2>
-      <p className="document-lede">dev@rangan39.sh</p>
+      <p className="document-lede">rangan39@outlook.com</p>
       <div className="document-copy">
         <p>For projects, research, or a useful conversation.</p>
       </div>
@@ -209,50 +192,8 @@ function EmailDocument({
   );
 }
 
-function DiscordDocument({
-  copied,
-  copyHandle,
-}: {
-  copied: boolean;
-  copyHandle: () => Promise<void>;
-}) {
-  return (
-    <>
-      <p className="document-eyebrow">contact / direct channel</p>
-      <h2>Discord</h2>
-      <p className="document-lede">gauravranganath</p>
-      <div className="document-copy">
-        <p>A direct line. Copy the username and send a signal.</p>
-      </div>
-      <button type="button" className="document-action" onClick={copyHandle}>
-        <span>{copied ? "username copied" : "copy username"}</span>
-        <span aria-hidden="true">{copied ? "✓" : "＋"}</span>
-      </button>
-      <span className="sr-only" aria-live="polite">
-        {copied ? "Discord username copied to clipboard." : ""}
-      </span>
-    </>
-  );
-}
-
-function XDocument() {
-  return (
-    <>
-      <p className="document-eyebrow">contact / public feed</p>
-      <h2>X</h2>
-      <p className="document-lede">@ranganath92929</p>
-      <div className="document-copy">
-        <p>Notes from the build, in public.</p>
-      </div>
-      <ExternalAction href="https://x.com/ranganath92929">open x</ExternalAction>
-    </>
-  );
-}
-
 function fileContent(
   id: FileId,
-  discordCopied: boolean,
-  copyDiscordHandle: () => Promise<void>,
   emailCopied: boolean,
   copyEmailAddress: () => Promise<void>,
 ) {
@@ -263,15 +204,6 @@ function fileContent(
       return (
         <EmailDocument copied={emailCopied} copyAddress={copyEmailAddress} />
       );
-    case "discord":
-      return (
-        <DiscordDocument
-          copied={discordCopied}
-          copyHandle={copyDiscordHandle}
-        />
-      );
-    case "x":
-      return <XDocument />;
     default:
       return <AboutDocument />;
   }
@@ -286,7 +218,6 @@ export function PortfolioExplorer() {
     contact: false,
     oss: false,
   });
-  const [discordCopied, setDiscordCopied] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
 
   const activeFile = activeFileId ? getFile(activeFileId) : null;
@@ -295,9 +226,7 @@ export function PortfolioExplorer() {
     function syncFileFromHistory() {
       const fileId = window.location.hash.slice(1);
       setActiveFileId(
-        fileId === "about" || fileId === "discord" || fileId === "email"
-          ? fileId
-          : null,
+        fileId === "about" || fileId === "email" ? fileId : null,
       );
     }
 
@@ -332,19 +261,9 @@ export function PortfolioExplorer() {
     }));
   }
 
-  async function copyDiscordHandle() {
-    try {
-      await navigator.clipboard.writeText("gauravranganath");
-      setDiscordCopied(true);
-      window.setTimeout(() => setDiscordCopied(false), 1800);
-    } catch {
-      setDiscordCopied(false);
-    }
-  }
-
   async function copyEmailAddress() {
     try {
-      await navigator.clipboard.writeText("dev@rangan39.sh");
+      await navigator.clipboard.writeText("rangan39@outlook.com");
       setEmailCopied(true);
       window.setTimeout(() => setEmailCopied(false), 1800);
     } catch {
@@ -400,13 +319,7 @@ export function PortfolioExplorer() {
               </span>
             </button>
             <div className="document-body">
-              {fileContent(
-                activeFile.id,
-                discordCopied,
-                copyDiscordHandle,
-                emailCopied,
-                copyEmailAddress,
-              )}
+              {fileContent(activeFile.id, emailCopied, copyEmailAddress)}
             </div>
           </article>
         ) : (
@@ -516,7 +429,7 @@ export function PortfolioExplorer() {
         )}
 
         <div className="vault-footer" aria-hidden="true">
-          <span>{activeFile ? activeFile.name : "5 items / 8 files"}</span>
+          <span>{activeFile ? activeFile.name : "5 items / 6 files"}</span>
           <span className="vault-signal">
             <i />
             ready
