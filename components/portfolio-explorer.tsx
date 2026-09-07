@@ -110,6 +110,32 @@ function getFile(id: FileId) {
   return files.find((file) => file.id === id) ?? aboutFile;
 }
 
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    // Clipboard API can be unavailable or blocked (older browsers,
+    // permission policy, insecure context) — fall back to the
+    // execCommand approach before giving up.
+  }
+
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    const succeeded = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return succeeded;
+  } catch {
+    return false;
+  }
+}
+
 function ExternalAction({
   href,
   children,
@@ -166,11 +192,19 @@ function LinkedInDocument() {
   );
 }
 
+type CopyStatus = "idle" | "copied" | "error";
+
+function copyButtonLabel(status: CopyStatus, idleLabel: string) {
+  if (status === "copied") return "copied";
+  if (status === "error") return "couldn't copy — select manually";
+  return idleLabel;
+}
+
 function EmailDocument({
-  copied,
+  status,
   copyAddress,
 }: {
-  copied: boolean;
+  status: CopyStatus;
   copyAddress: () => Promise<void>;
 }) {
   return (
@@ -182,11 +216,17 @@ function EmailDocument({
         <p>For projects, research, or a useful conversation.</p>
       </div>
       <button type="button" className="document-action" onClick={copyAddress}>
-        <span>{copied ? "email copied" : "copy email"}</span>
-        <span aria-hidden="true">{copied ? "✓" : "＋"}</span>
+        <span>{copyButtonLabel(status, "copy email")}</span>
+        <span aria-hidden="true">
+          {status === "copied" ? "✓" : status === "error" ? "!" : "＋"}
+        </span>
       </button>
       <span className="sr-only" aria-live="polite">
-        {copied ? "Email address copied to clipboard." : ""}
+        {status === "copied"
+          ? "Email address copied to clipboard."
+          : status === "error"
+            ? "Couldn't copy the email address automatically. Please select and copy it manually."
+            : ""}
       </span>
     </>
   );
@@ -194,7 +234,7 @@ function EmailDocument({
 
 function fileContent(
   id: FileId,
-  emailCopied: boolean,
+  emailCopyStatus: CopyStatus,
   copyEmailAddress: () => Promise<void>,
 ) {
   switch (id) {
@@ -202,7 +242,7 @@ function fileContent(
       return <LinkedInDocument />;
     case "email":
       return (
-        <EmailDocument copied={emailCopied} copyAddress={copyEmailAddress} />
+        <EmailDocument status={emailCopyStatus} copyAddress={copyEmailAddress} />
       );
     default:
       return <AboutDocument />;
@@ -218,7 +258,7 @@ export function PortfolioExplorer() {
     contact: false,
     oss: false,
   });
-  const [emailCopied, setEmailCopied] = useState(false);
+  const [emailCopyStatus, setEmailCopyStatus] = useState<CopyStatus>("idle");
 
   const activeFile = activeFileId ? getFile(activeFileId) : null;
 
@@ -262,13 +302,9 @@ export function PortfolioExplorer() {
   }
 
   async function copyEmailAddress() {
-    try {
-      await navigator.clipboard.writeText("rangan39@outlook.com");
-      setEmailCopied(true);
-      window.setTimeout(() => setEmailCopied(false), 1800);
-    } catch {
-      setEmailCopied(false);
-    }
+    const succeeded = await copyTextToClipboard("rangan39@outlook.com");
+    setEmailCopyStatus(succeeded ? "copied" : "error");
+    window.setTimeout(() => setEmailCopyStatus("idle"), 1800);
   }
 
   return (
@@ -319,7 +355,7 @@ export function PortfolioExplorer() {
               </span>
             </button>
             <div className="document-body">
-              {fileContent(activeFile.id, emailCopied, copyEmailAddress)}
+              {fileContent(activeFile.id, emailCopyStatus, copyEmailAddress)}
             </div>
           </article>
         ) : (
